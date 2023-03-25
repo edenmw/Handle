@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-################################################################################
-# Form generated from reading UI file 'handle.ui'
+################################################################################################################################
+## 主要功能 查詢窗口(視窗)信息
+#  直接拖拉到想查詢的窗口上即可
+#  顯示的信息有 程序的 icon, 句炳, 類名, 標題, 線程ID, 進程ID, 進程名稱, 進程路徑, CPU使用量, 線程數, 窗口左上角的座標, 窗口四角座標
+#  下方功能按鈕功能有 指定窗口置頂與取消, 窗口顯示到頂部, 強制關閉程序, 打開程序的文件所在的資料夾
 #
-# Created by: Qt User Interface Compiler version 6.2.4
-#
-# WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
+##
+################################################################################################################################
 
 import sys
 
@@ -50,7 +51,7 @@ class LongButton(QPushButton):
 
     def i_con(self, exePath2):
         try:
-            exe_path = exePath2.replace("\\", "/")  # 替换
+            exe_path = exePath2.replace("\\", "/")  # 替換
             large, small = win32gui.ExtractIconEx(f'{exe_path}', 0)
             use_icon = large[0]
             destroy_icon = small[0]
@@ -71,23 +72,23 @@ class LongButton(QPushButton):
         except BaseException:
             pass
 
-    # 重写mouseReleaseEvent方法，关闭timer
+    # 重寫mouseReleaseEvent方法，關閉timer
     def mouseReleaseEvent(self, e):
         try:
-            point = win32api.GetCursorPos()  # 鼠标位置
+            point = win32api.GetCursorPos()  # 鼠標位置
             hwnd = win32gui.WindowFromPoint(point)  # 窗口句柄
-            title = win32gui.GetWindowText(hwnd)  # 窗口标题
-            clsname = win32gui.GetClassName(hwnd)  # 窗口类名
+            title = win32gui.GetWindowText(hwnd)  # 窗口標題
+            clsname = win32gui.GetClassName(hwnd)  # 窗口類名
             hread_id, process_id = win32process.GetWindowThreadProcessId(
-                hwnd)  # 线程ID  进程ID
-            process = psutil.Process(process_id)  # 程序名称  通过进程ID获取
-            p_bin = psutil.Process(process_id).exe()  # 程序路径  通过进程ID获取
+                hwnd)  # 線程ID  進程ID
+            process = psutil.Process(process_id)  # 程序名稱  通過進程ID獲取
+            p_bin = psutil.Process(process_id).exe()  # 程序路徑  通過進程ID獲取
             mem_percent = psutil.Process(
-                process_id).memory_percent()  # CPU利用率  通过进程ID获取
+                process_id).memory_percent()  # CPU利用率  通過進程ID獲取
             num_threads = psutil.Process(
-                process_id).num_threads()  # 线程数  通过进程ID获取
+                process_id).num_threads()  # 線程數  通過進程ID獲取
             left, top, right, bottom = win32gui.GetWindowRect(
-                hwnd)  # 窗口坐标  通过窗口句柄获取 四个角的坐标
+                hwnd)  # 窗口坐標  通過窗口句柄獲取 四個角的坐標
             self.i_con(p_bin)
 
             self.val.emit(str(hwnd),
@@ -130,9 +131,9 @@ class Window(QWidget):
         self.setup_ui(self)
         self.drag = False
         drag = False
-        # 准许拖拉
+        # 准許拖拉
         self.setAcceptDrops(True)
-        # 隐藏窗口编筐
+        # 隱藏窗口編筐
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
         # self.v_hwnd = None
@@ -459,7 +460,7 @@ class Window(QWidget):
         self.retranslateUi(Form)
 
         self.pushButton.val.connect(self.obtain)
-        # 区域 光标 样式: Cross
+        # 區域 光標 樣式: Cross
         self.pushButton.setCursor(Qt.CrossCursor)
         self.pushButton_2.clicked.connect(self.mini_button)
         self.pushButton_3.clicked.connect(self.close_button)
@@ -630,8 +631,8 @@ class Window(QWidget):
         except:
             pass
 
-    def open_folder(self):
-        bins = self.v_p_bin.replace("\\", "/")  # 替换
+   def open_folder(self):
+        bins = self.v_p_bin.replace("\\", "/")  # 替換
         bins = os.path.split(bins)[0].replace("\\", "/")
         os.startfile(str(bins))
 
@@ -644,7 +645,7 @@ class Window(QWidget):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)  # 创建一个QApplication，也就是你要开发的软件app
+    app = QApplication(sys.argv)  # 創建一個QApplication，也就是你要開發的軟件app
     window = Window()
     window.show()
     sys.exit(app.exec())
